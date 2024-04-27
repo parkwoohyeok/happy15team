@@ -11,7 +11,6 @@ import modalState from "@/lib/modalState";
 const CheckCardModal = () => {
   const { setOpenModal } = modalState();
   const {
-    openEditCardModal,
     confirmCardData,
     openedModalId,
     setOpenedCardData,
@@ -40,7 +39,6 @@ const CheckCardModal = () => {
 
   const openEditModal = () => {
     setOpenModal("");
-    openEditCardModal();
   };
 
   const handleDeleteCard = async () => {

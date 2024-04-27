@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 
 const dashboard = () => {
   const {
-    editCardModal,
     dashboardData,
     setDashboardData,
     loginUserData,

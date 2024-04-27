@@ -11,7 +11,6 @@ const setModals = create((set) => ({
   registerSuccess: false, // 회원가입 성공 모달 상태
   openModal: () => set({ modalState: true }),
   closeModal: () => set({ modalState: false }),
-  editCardModal: false,
   nicknameError: false, // 닉네임 10자 이상 에러
   samePassword: false, // 현재 비밀번호와 새 비밀번호 중복
   changePassword: false, // 비밀번호 변경 성공
@@ -63,8 +62,6 @@ setOpenedModalId:(data:any) => set({openedModalId:data}),
   setDashboardMembers: (data: any) => set({ dashboardMembers: data }),
   setLoginUserData: (data: any) => set({ loginUserData: data }),
   setDashboardData: (data: any) => set({ dashboardData: data }),
-  openEditCardModal: () => set({ editCardModal: true }),
-  closeEditCardModal: () => set({ editCardModal: false }),
   openPasswordMismatchModal: () => set({ passwordMismatch: true }),
   closePasswordMismatchModal: () => set({ passwordMismatch: false }),
   openCreateDashboardModal: () => set({ createDashboardModalState: true }),
