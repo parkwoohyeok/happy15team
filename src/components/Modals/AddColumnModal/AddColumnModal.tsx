@@ -33,7 +33,7 @@ const AddColumnModal = () => {
   return (
     <>
       <h1 className={styles.modalTitle}>새 컬럼 생성</h1>
-      <form>
+      <form className={styles.formContainer}>
         <label htmlFor="inviteInput">이름</label>
         <input
           maxLength={10}
