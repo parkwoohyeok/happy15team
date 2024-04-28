@@ -3,13 +3,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import UserService from "@/api/UserService";
-import setModals from "@/lib/zustand";
 import modalState from "@/lib/modalState";
 
 function PasswordForm() {
   const { setOpenModal } = modalState();
-  const { changePassword }: any =
-    setModals();
 
   // react-hook-form, yup 라이브러리를 통해 유효성 검사
   const formSchema = yup.object({
