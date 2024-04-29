@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import modalState from "@/lib/modalState";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "react-query";
@@ -9,8 +10,6 @@ import Image from "next/image";
 import { LoginData } from "@/types/interface";
 import postSignIn from "@/api/postSignIn";
 import { useRouter } from "next/router";
-import MyDashboard from "@/pages/mydashboard";
-import modalState from "@/lib/modalState";
 
 const formSchema = yup.object({
   email: yup
@@ -22,7 +21,7 @@ const formSchema = yup.object({
     .required("8자 이상 입력해 주세요.")
     .min(8, "8자 이상 입력해 주세요.")
     .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/,
       "비밀번호는 영문, 숫자 조합 8자 이상 입력해 주세요."
     ),
   confirmPassword: yup
@@ -33,7 +32,6 @@ const formSchema = yup.object({
 function SignInForm() {
   const { setOpenModal } = modalState();
   const [seePassword, setSeePassword] = useState<boolean>(false);
-  const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -81,34 +79,31 @@ function SignInForm() {
     mutate(data);
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      router.push("/mydashboard");
-    } else {
-      setInitialDataLoaded(true);
-    }
-  }, [router]);
-
-  if (!initialDataLoaded) {
-    return null;
-  }
-
-  if (!localStorage.getItem("accessToken")) {
-    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles.inputContainer}>
-          <label htmlFor="email">이메일</label>
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className={styles.inputContainer}>
+        <label htmlFor="email">이메일</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="이메일을 입력해 주세요"
+          {...register("email")}
+          className={errors.email ? styles.errorFocus : styles.notError}
+        />
+        {errors.email && (
+          <div className={styles.error}>{errors.email.message}</div>
+        )}
+      </div>
+      <div className={styles.inputContainer}>
+        <label htmlFor="password">비밀번호</label>
+        <div className={styles.pwContainer}>
           <input
-            id="email"
-            type="email"
-            placeholder="이메일을 입력해 주세요"
-            {...register("email")}
-            className={errors.email ? styles.errorFocus : styles.notError}
+            id="password"
+            type={seePassword ? "text" : "password"}
+            placeholder="비밀번호를 입력해 주세요"
+            {...register("password")}
+            className={errors.password ? styles.errorFocus : styles.notError}
           />
-          {errors.email && (
-            <div className={styles.error}>{errors.email.message}</div>
-          )}
           <button
             type="button"
             className={styles.eye}
@@ -116,14 +111,14 @@ function SignInForm() {
           >
             {!seePassword ? (
               <Image
-                src="/images/eye-off.svg"
+                src="/images/eye-on.svg"
                 width={25}
                 height={25}
                 alt="eyeOn"
               />
             ) : (
               <Image
-                src="/images/eye-on.svg"
+                src="/images/eye-off.svg"
                 width={25}
                 height={25}
                 alt="eyeOff"
@@ -131,53 +126,18 @@ function SignInForm() {
             )}
           </button>
         </div>
-        <div className={styles.inputContainer}>
-          <label htmlFor="password">비밀번호</label>
-          <div className={styles.passwordContainer}>
-            <input
-              id="password"
-              type={seePassword ? "text" : "password"}
-              placeholder="비밀번호를 입력해 주세요"
-              {...register("password")}
-              className={errors.password ? styles.errorFocus : styles.notError}
-            />
-            <button
-              type="button"
-              className={styles.eye}
-              onClick={seePasswordHandler}
-            >
-              {!seePassword ? (
-                <Image
-                  src="/images/eye-on.svg"
-                  width={15}
-                  height={15}
-                  alt="eyeOn"
-                />
-              ) : (
-                <Image
-                  src="/images/eye-off.svg"
-                  width={15}
-                  height={15}
-                  alt="eyeOff"
-                />
-              )}
-            </button>
-          </div>
-          {errors.password && (
-            <div className={styles.error}>{errors.password.message}</div>
-          )}
-        </div>
-        <div className={styles.errorMessage}>
-          {errorMessage && <div className={styles.error}>{errorMessage}</div>}
-        </div>
-        <button type="submit" className={styles.loginBtn}>
-          로그인
-        </button>
-      </form>
-    );
-  }
-
-  return <MyDashboard />;
+        {errors.password && (
+          <div className={styles.error}>{errors.password.message}</div>
+        )}
+      </div>
+      <div className={styles.errorMessage}>
+        {errorMessage && <div className={styles.error}>{errorMessage}</div>}
+      </div>
+      <button type="submit" className={styles.loginBtn}>
+        로그인
+      </button>
+    </form>
+  );
 }
 
 export default SignInForm;
